@@ -1,0 +1,78 @@
+#!/bin/bash
+
+echo "This is a Phone Catalog.Please choose operation"
+#echo "Enter your choice:"
+#echo choice
+#read choice
+
+
+
+while getopts ":acdlns:" opt; do
+ case ${opt} in 
+	a )
+		echo "You chose to add enry"
+		echo "Give name"
+		read name
+		echo "Give lastname"
+		read lastname
+		echo "Give city"
+		read city
+		echo "Give phonenumber"
+		read phone
+		echo -e "$name\t$lastname\t$city\t$phone" >> catalog
+		;; 
+	l )
+		echo "You chose to show file without empty lines"
+		grep -v -e '^[[:space:]]*$' catalog
+		;;
+	s )
+		echo "You chose to sort by column"
+		sort -k $2,$2 catalog #To $2 krataei thn timh tou deyterou arithmou pou dwsame
+		;;
+	c )
+		echo "Show lines with given keyword"
+		echo $1
+		x=$(cat catalog | grep $2)
+		if [[ $x == "" ]] #Elegxos ama h metavlhth einai kenh ara den yparxei to keyword
+		then
+			echo "There is no lines with the given keyword"
+		else
+			cat catalog | grep $2
+		fi	
+		;;
+	d )
+		x=$(cat catalog | grep $2)
+		if [[ $3 == "-b" && $x != "" ]]
+		then 
+			echo "Delete lines with keyword and replace with blank"
+			sed "s/.*$2.*//" catalog
+		elif [[ $3 == "-r" && $x != "" ]]
+		then
+			sed "/$2/d" catalog
+		else
+			echo " "
+		fi
+		
+		if [[ $x == "" ]] #Elegxos ama h metavlhth einai kenh ara den yparxei to keyword
+		then
+			echo "There is no lines with the given keyword"
+		fi		
+		;;
+	n )
+		echo "Show number of blank lines"
+		grep -cvP "\S" catalog #emfanish plhthous kenwn grammwn
+		echo "Do you want to delete blank lines?"
+		read ans
+		if [ $ans == "yes" ]
+		then
+			sed -r "/^\s*$/d" catalog
+		else
+			echo "Bye"
+		fi
+		;;
+	\? )
+		echo "Not supported operation"
+		;;
+ 
+ esac
+done

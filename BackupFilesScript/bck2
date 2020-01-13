@@ -1,0 +1,6 @@
+#!/bin/bash
+
+d=$(pwd)
+tar -cf backup.tar $d 
+mv backup.tar /tmp	
+

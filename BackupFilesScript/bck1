@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Oi entoles tha ektelestoun ston xrono pou dwsame
+at $4pm <<ENDMARKER 
+
+grep -i $1 /etc/passwd
+echo "Give directory to create backup: " $2
+echo "Give directory to copy the backup of the second directory: " $3
+
+if [ -d $3 ]
+then
+	tar -cf backup.tar /$2/ 
+	mv backup.tar /$3/	
+else
+	tar -cf backup.tar /$2/ >> $3
+	
+fi
+ENDMARKER

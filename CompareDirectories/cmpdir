@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [ -d $P1 ] && [ -d $2 ]; then
+	
+	echo "$1 and $2 are directories"
+	#diff -q $1/ $2/ 
+	comm -12 <(ls $1) <(ls $2)
+	
+	echo "Choose directory to display files"
+	read choice
+	
+	if [[ $choice == $1 ]] 
+	then
+		diff -q $1/ $2/ | grep ".$1."
+		echo "The size of the files is : " 
+		du -s $1 #Gia na deiksoume to megethos tou directory kai twn arxeiwn pou periexei
+		x=$(comm -12 <(ls $1) <(ls $2)) #Gia na elegksoume an ypaxoun koina arxeia sta directories
+		comm -12 <(ls $1) <(ls $2) > newdir1
+		ln $1 hardlink1
+		if [[ $x == "" ]]
+		then
+			echo "There are no same files"
+		fi
+	elif [[ $choice == $2 ]]
+	then
+		diff -q $1/ $2/ | grep ".$2."
+		echo "The size of the files is : " 
+		du -s $2 
+		x=$(comm -12 <(ls $1) <(ls $2))
+		comm -12 <(ls $1) <(ls $2) > newdir2 #dhmiourgia neou directory me koina arxeia 
+		ln $2 hardlink2 #Error		
+		if [[ $x == "" ]]
+		then
+			echo "There are no same files"
+		fi
+	else
+		echo "Not valid option"
+	fi
+	
+else
+	echo "Not valid"
+	exit 1
+fi
